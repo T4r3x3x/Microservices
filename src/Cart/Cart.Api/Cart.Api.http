@@ -1,0 +1,10 @@
+@CartApi_HostAddress = http://localhost:5041
+
+GET {{CartApi_HostAddress}}/
+Accept: application/json
+
+###
+
+GET {{CartApi_HostAddress}}/health
+
+###

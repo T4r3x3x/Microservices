@@ -1,0 +1,10 @@
+@OrdersApi_HostAddress = http://localhost:5238
+
+GET {{OrdersApi_HostAddress}}/
+Accept: application/json
+
+###
+
+GET {{OrdersApi_HostAddress}}/health
+
+###

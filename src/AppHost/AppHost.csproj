@@ -1,0 +1,23 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.4.3">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>e3eab65d-3759-4563-a4c6-b2cd0e6ec682</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="MessagePack" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gateway\Gateway.csproj" />
+    <ProjectReference Include="..\Catalog\Catalog.Api\Catalog.Api.csproj" />
+    <ProjectReference Include="..\Cart\Cart.Api\Cart.Api.csproj" />
+    <ProjectReference Include="..\Orders\Orders.Api\Orders.Api.csproj" />
+    <ProjectReference Include="..\Notifications\Notifications.Worker\Notifications.Worker.csproj" />
+  </ItemGroup>
+
+</Project>
