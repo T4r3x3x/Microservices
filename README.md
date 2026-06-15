@@ -25,6 +25,7 @@
 ## Требования
 
 - .NET SDK `10.0.103` или совместимый patch-релиз;
+- .NET Runtime `8.x` для запуска AppHost;
 - Aspire CLI `13.4.3`;
 - Docker Desktop или другой Docker-compatible runtime версии `28.0.0` или
   новее.
@@ -76,10 +77,11 @@ aspire run --apphost src/AppHost/AppHost.csproj
 локальных секретов используются Aspire parameters, user secrets или переменные
 окружения. Локальные `appsettings.Local.json` и `.env` игнорируются Git.
 
-## Известная проблема окружения
+## Совместимость AppHost
 
-На текущей машине установлен Docker client `26.1.4`, тогда как Aspire `13.4.3`
-требует минимум `28.0.0`. Доступ к Docker daemon также закрыт. Smoke-запуск
-AppHost из автоматизированной сессии завершается ошибкой TLS-соединения с
-локальным DCP. Solution при этом восстанавливается и собирается без
-предупреждений и ошибок.
+Сервисы и тесты работают на `net10.0`. AppHost временно нацелен на `net8.0`,
+поскольку локальный DCP Aspire `13.4.3` при запуске AppHost на .NET `10.0.3`
+завершает TLS-соединение с `unexpected EOF`. На `net8.0` тот же AppHost
+стабильно запускает PostgreSQL, Redis, RabbitMQ и все приложения.
+
+Ограничение нужно пересмотреть после обновления Aspire или .NET runtime.
