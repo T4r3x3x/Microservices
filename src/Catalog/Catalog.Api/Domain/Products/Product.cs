@@ -57,6 +57,27 @@ public sealed class Product
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
+        string normalizedName = name.Trim();
+        string? normalizedDescription = string.IsNullOrWhiteSpace(description)
+            ? null
+            : description.Trim();
+
+        if (normalizedName.Length > ProductConstraints.NameMaxLength)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(name),
+                name,
+                $"Product name cannot exceed {ProductConstraints.NameMaxLength} characters.");
+        }
+
+        if (normalizedDescription?.Length > ProductConstraints.DescriptionMaxLength)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(description),
+                description,
+                $"Product description cannot exceed {ProductConstraints.DescriptionMaxLength} characters.");
+        }
+
         if (price < 0)
         {
             throw new ArgumentOutOfRangeException(
@@ -65,10 +86,16 @@ public sealed class Product
                 "Product price cannot be negative.");
         }
 
-        Name = name.Trim();
-        Description = string.IsNullOrWhiteSpace(description)
-            ? null
-            : description.Trim();
+        if (!ProductPrice.IsValid(price))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(price),
+                price,
+                $"Product price must fit decimal({ProductConstraints.PricePrecision},{ProductConstraints.PriceScale}).");
+        }
+
+        Name = normalizedName;
+        Description = normalizedDescription;
         Price = price;
     }
 

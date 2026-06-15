@@ -18,16 +18,18 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(product => product.Name)
             .HasColumnName("name")
-            .HasMaxLength(200)
+            .HasMaxLength(ProductConstraints.NameMaxLength)
             .IsRequired();
 
         builder.Property(product => product.Description)
             .HasColumnName("description")
-            .HasMaxLength(2000);
+            .HasMaxLength(ProductConstraints.DescriptionMaxLength);
 
         builder.Property(product => product.Price)
             .HasColumnName("price")
-            .HasPrecision(18, 2)
+            .HasPrecision(
+                ProductConstraints.PricePrecision,
+                ProductConstraints.PriceScale)
             .IsRequired();
 
         builder.Property(product => product.AvailableQuantity)
