@@ -20,6 +20,11 @@ builder.Services.AddSingleton(TimeProvider.System);
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment() && catalogDatabaseConfigured)
+{
+    await app.Services.SeedCatalogAsync();
+}
+
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
