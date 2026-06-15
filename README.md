@@ -71,6 +71,22 @@ aspire run --apphost src/AppHost/AppHost.csproj
 Интеграционные smoke-тесты Catalog, Cart и Orders проверяют эти endpoints через
 `WebApplicationFactory` без необходимости запуска контейнеров.
 
+## Миграции Catalog
+
+EF Core CLI закреплён как локальный инструмент репозитория:
+
+```powershell
+dotnet tool restore
+dotnet ef migrations add <MigrationName> `
+  --project src/Catalog/Catalog.Api/Catalog.Api.csproj
+dotnet ef database update `
+  --project src/Catalog/Catalog.Api/Catalog.Api.csproj
+```
+
+При запуске через Aspire connection string передаётся в
+`ConnectionStrings__catalog-db`. Миграции не применяются автоматически при
+старте API: это отдельный управляемый шаг.
+
 ## Локальные секреты
 
 Пароли и connection strings не должны попадать в `appsettings*.json`. Для

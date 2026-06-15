@@ -1,10 +1,12 @@
+using Catalog.Api.Infrastructure.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
 if (builder.Configuration.GetConnectionString("catalog-db") is not null)
 {
-    builder.AddNpgsqlDataSource("catalog-db");
+    builder.AddNpgsqlDbContext<CatalogDbContext>("catalog-db");
 }
 
 builder.Services.AddOpenApi();
