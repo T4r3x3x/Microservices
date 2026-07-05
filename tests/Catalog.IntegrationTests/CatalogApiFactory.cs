@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microservices.Infrastructure;
 using Testcontainers.PostgreSql;
 
 namespace Catalog.IntegrationTests;
@@ -11,7 +12,8 @@ public sealed class CatalogApiFactory :
     WebApplicationFactory<Program>,
     IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _database = new PostgreSqlBuilder("postgres:18.3")
+    private readonly PostgreSqlContainer _database = new PostgreSqlBuilder(
+            ContainerImages.PostgresImage)
         .WithDatabase("catalog_tests")
         .WithUsername("postgres")
         .WithPassword("postgres")

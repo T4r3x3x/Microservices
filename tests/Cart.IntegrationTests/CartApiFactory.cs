@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microservices.Infrastructure;
 using StackExchange.Redis;
 using Testcontainers.Redis;
 
@@ -13,7 +14,7 @@ public sealed class CartApiFactory :
     WebApplicationFactory<Program>,
     IAsyncLifetime
 {
-    private readonly RedisContainer redis = new RedisBuilder("redis:8.2")
+    private readonly RedisContainer redis = new RedisBuilder(ContainerImages.RedisImage)
         .Build();
     private readonly FakeCatalog catalog = new();
 
