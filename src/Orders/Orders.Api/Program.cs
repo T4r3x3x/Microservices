@@ -1,24 +1,41 @@
+using Orders.Api.Features.Carts;
+using Orders.Api.Features.Orders;
+using Orders.Api.Infrastructure.Messaging;
+using Orders.Api.Infrastructure.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-if (builder.Configuration.GetConnectionString("orders-db") is not null)
+bool ordersDatabaseConfigured =
+    builder.Configuration.GetConnectionString("orders-db") is not null;
+bool messagingConfigured =
+    builder.Configuration.GetConnectionString("messaging") is not null;
+
+if (ordersDatabaseConfigured)
 {
-    builder.AddNpgsqlDataSource("orders-db");
+    builder.AddNpgsqlDbContext<OrdersDbContext>("orders-db");
 }
 
-if (builder.Configuration.GetConnectionString("messaging") is not null)
+if (messagingConfigured)
 {
     builder.AddRabbitMQClient("messaging");
 }
 
-builder.Services.AddHttpClient("cart-api", static client =>
+if (ordersDatabaseConfigured && messagingConfigured)
+{
+    builder.Services.AddHostedService<OutboxPublisherWorker>();
+}
+
+builder.Services.AddHttpClient<CartClient>("cart-api", static client =>
 {
     client.BaseAddress = new Uri("https+http://cart-api");
 });
 
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+builder.Services.AddValidation();
+builder.Services.AddSingleton(TimeProvider.System);
 
 var app = builder.Build();
 
@@ -34,6 +51,11 @@ app.MapGet("/", () => Results.Ok(new
     Service = "Orders.Api",
     Status = "ok"
 }));
+
+if (ordersDatabaseConfigured)
+{
+    app.MapOrderEndpoints();
+}
 
 app.MapDefaultEndpoints();
 
